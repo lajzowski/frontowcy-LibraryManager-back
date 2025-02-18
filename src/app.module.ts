@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import * as process from 'node:process';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mariadb',
+      connectorPackage: 'mysql2',
       host: process.env.MYSQL_HOST,
       port: Number(process.env.MYSQL_PORT),
       username: process.env.MYSQL_USERNAME,
@@ -21,6 +23,7 @@ import * as process from 'node:process';
       synchronize: true,
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
