@@ -11,14 +11,6 @@ import { JwtPayload } from 'src/auth/jwt.strategy';
 export class AuthService {
   constructor() {}
 
-  private cookieName = 'token';
-
-  private cookieOptions: CookieOptions = {
-    secure: process.env.DOMAIN === '1',
-    domain: process.env.DOMAIN,
-    httpOnly: false,
-  };
-
   private async createToken(
     currentTokenId: string,
   ): Promise<{ accessToken: string; expiresIn: number }> {
@@ -60,10 +52,14 @@ export class AuthService {
 
       const token = await this.createToken(await this.generateToken(user));
 
-      return res
-        .status(200)
-        .cookie(this.cookieName, token.accessToken, this.cookieOptions)
-        .json({ ok: true });
+      const { password: _, token: _1, ...userWithoutPassword } = user;
+
+      return (
+        res
+          .status(200)
+          //.cookie(this.cookieName, token.accessToken, this.cookieOptions)
+          .json({ accessKey: token.accessToken, user: userWithoutPassword })
+      );
     } catch (e) {
       return res.status(500).json({ error: e.message });
     }
@@ -73,7 +69,7 @@ export class AuthService {
     try {
       user.token = null;
       await user.save();
-      res.clearCookie(this.cookieName, this.cookieOptions);
+      // res.clearCookie(this.cookieName, this.cookieOptions);
       return res.json({ ok: true });
     } catch (e) {
       return res.json({ error: e.message });

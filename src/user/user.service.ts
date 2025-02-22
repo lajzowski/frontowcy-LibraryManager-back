@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { User } from './entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
+import { hashPassword } from '../utils/hash-password';
 
 @Injectable()
 export class UserService {
@@ -40,10 +41,12 @@ export class UserService {
       firstname,
       lastname,
       email,
-      password,
+      password: hashPassword(password),
     });
 
     await newUser.save();
+
+    console.log({ newUser });
 
     const { password: _, ...userWithoutPassword } = newUser;
 

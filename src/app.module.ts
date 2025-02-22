@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import * as process from 'node:process';
 import { AuthModule } from './auth/auth.module';
+import { BooksModule } from './books/books.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UserModule,
     AuthModule,
+    BooksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

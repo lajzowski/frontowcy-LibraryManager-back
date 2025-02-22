@@ -8,15 +8,18 @@ export interface JwtPayload {
   id: string;
 }
 
-function cookieExtractor(req: Request): null | string {
-  return req && req.cookies ? (req.cookies?.token ?? null) : null;
+function accessKeyExtractor(req: Request): null | string {
+  const authHeader = req.headers.authorization;
+  return authHeader && authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7)
+    : null;
 }
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: cookieExtractor,
+      jwtFromRequest: accessKeyExtractor,
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_KEY,
     });
