@@ -40,7 +40,12 @@ export class BooksService {
     });
 
     return books.map((book) => {
-      book.count = book.count - book.rents.length;
+      const bookRents = book.rents.reduce(
+        (prev, curr) => (!curr.returnDate ? prev + 1 : prev),
+        0,
+      );
+
+      book.count = book.count - bookRents;
       book.rents = [];
       return book;
     });
@@ -65,7 +70,12 @@ export class BooksService {
       };
     }
 
-    book.count = book.count - book.rents.length;
+    const bookRents = book.rents.reduce(
+      (prev, curr) => (!curr.returnDate ? prev + 1 : prev),
+      0,
+    );
+
+    book.count = book.count - bookRents;
     book.rents = [];
     return book;
   }
@@ -85,7 +95,12 @@ export class BooksService {
       };
     }
 
-    const availableBook = book.count - book.rents.length;
+    const bookRents = book.rents.reduce(
+      (prev, curr) => (!curr.returnDate ? prev + 1 : prev),
+      0,
+    );
+
+    const availableBook = book.count - bookRents;
 
     if (availableBook === 0) {
       return {

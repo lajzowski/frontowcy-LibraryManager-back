@@ -18,7 +18,10 @@ export class Rent extends BaseEntity {
   @JoinColumn()
   book: Book;
 
-  @ManyToOne(() => User, (entity) => entity.id)
+  @ManyToOne(() => User, (entity) => entity.id, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   user: User;
 
