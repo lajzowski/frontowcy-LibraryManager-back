@@ -19,4 +19,10 @@ export class UserController {
   register(@Body() obj: UserRegisterDto) {
     return this.userService.register(obj);
   }
+
+  @UseRule()
+  @Get('auth-test')
+  authTest() {
+    return 'auth test';
+  }
 }
