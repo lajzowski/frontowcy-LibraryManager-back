@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Book } from './book.entity';
+import { Book } from '../../books/entities/book.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity()
@@ -23,5 +23,8 @@ export class Rent extends BaseEntity {
   user: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  date: Date;
+  rentDate: Date;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  returnDate: Date | null;
 }

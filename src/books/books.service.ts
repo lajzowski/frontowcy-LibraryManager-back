@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Book } from './entities/book.entity';
 import { User } from '../user/entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
-import { Rent } from './entities/rent.entity';
+import { Rent } from '../rents/entities/rent.entity';
 
 @Injectable()
 export class BooksService {

@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import * as process from 'node:process';
 import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
+import { RentsModule } from './rents/rents.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { BooksModule } from './books/books.module';
     UserModule,
     AuthModule,
     BooksModule,
+    RentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
