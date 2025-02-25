@@ -1,6 +1,9 @@
-import { IsNumber, IsString, Max, Min } from 'class-validator';
+import { IsNumber, IsString, IsUUID, Max, Min } from 'class-validator';
 
-export class AddBookDto {
+export class EditBookDto {
+  @IsUUID()
+  id: string;
+
   @IsString()
   title: string;
 

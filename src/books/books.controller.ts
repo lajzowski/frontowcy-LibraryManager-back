@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
@@ -12,6 +14,7 @@ import { UseRule } from '../decorators/use-rule.decorator';
 import { UserObj } from '../decorators/user-obj.decorator';
 import { User } from '../user/entities/user.entity';
 import { AddBookDto } from './dto/add-book.dto';
+import { EditBookDto } from './dto/edit-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -51,6 +54,44 @@ export class BooksController {
   @Post()
   async addBook(@Body() addBookDto: AddBookDto, @UserObj() user: User) {
     const result = await this.booksService.addBook(addBookDto, user);
+    if ('error' in result) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST, {
+        cause: new Error(result.error),
+      });
+    }
+    return result;
+  }
+
+  /** Edycja książki przez Admina- UWAGA! wykorzystano ID książki, nie slug jak przy pobieraniu
+   * @param bookId id książki
+   * */
+  @UseRule(['a9'])
+  @Patch(':bookId')
+  async editBook(
+    @Param('bookId') bookId: number,
+    @Body() editBookDto: EditBookDto,
+    @UserObj() user: User,
+  ) {
+    const result = await this.booksService.editBook(editBookDto, user);
+    if ('error' in result) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST, {
+        cause: new Error(result.error),
+      });
+    }
+    return result;
+  }
+
+  /** Usuwanie książki przez Admina- UWAGA! wykorzystano ID książki, nie slug jak przy pobieraniu
+   * @param bookId id książki
+   * */
+  @UseRule(['a9'])
+  @Delete(':bookId')
+  async deleteBook(
+    @Param('bookId') bookId: number,
+    @Body() editBookDto: EditBookDto,
+    @UserObj() user: User,
+  ) {
+    const result = await this.booksService.deleteBook(editBookDto, user);
     if ('error' in result) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST, {
         cause: new Error(result.error),
