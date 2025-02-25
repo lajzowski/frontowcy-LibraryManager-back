@@ -8,6 +8,7 @@ import * as process from 'node:process';
 import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
 import { RentsModule } from './rents/rents.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RentsModule } from './rents/rents.module';
     AuthModule,
     BooksModule,
     RentsModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
