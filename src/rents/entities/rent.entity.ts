@@ -25,6 +25,11 @@ export class Rent extends BaseEntity {
   @JoinColumn()
   user: User;
 
+  @Column({
+    type: 'bigint',
+  })
+  cardNumber: number;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   rentDate: Date;
 

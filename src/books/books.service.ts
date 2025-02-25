@@ -111,6 +111,7 @@ export class BooksService {
     const rentedBook = Rent.create({
       book,
       user,
+      cardNumber: user.cardNumber,
     });
 
     await rentedBook.save();
