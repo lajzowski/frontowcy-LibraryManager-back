@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Book } from './entities/book.entity';
 import { User } from '../user/entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
@@ -6,10 +6,14 @@ import { Rent } from '../rents/entities/rent.entity';
 import { AddBookDto } from './dto/add-book.dto';
 import { EditBookDto } from './dto/edit-book.dto';
 import { IsNull, Not } from 'typeorm';
-import { count } from 'rxjs';
+import { LogsService } from '../logs/logs.service';
+import { LogAction } from '../types/log-action.enum';
 
 @Injectable()
 export class BooksService {
+  @Inject(forwardRef(() => LogsService))
+  private readonly logsService: LogsService;
+
   /** Usuwanie polskich znaków i zabezpieczenie slug-a */
   private sanitizedSlug(slug: string) {
     return slug
@@ -128,6 +132,8 @@ export class BooksService {
 
     book.rents = [];
 
+    await this.logsService.addLog(user, LogAction.Rent, book);
+
     return book;
   }
 
@@ -164,6 +170,8 @@ export class BooksService {
     });
 
     await newBook.save();
+
+    await this.logsService.addLog(user, LogAction.Add);
 
     return newBook;
   }
@@ -234,6 +242,7 @@ export class BooksService {
 
     await book.save();
 
+    await this.logsService.addLog(user, LogAction.Edit, book);
     return book;
   }
 
@@ -272,6 +281,8 @@ export class BooksService {
     // oznaczanie książki jako usuniętej
     book.removed = true;
     await book.save();
+
+    await this.logsService.addLog(user, LogAction.Delete, book);
 
     return {
       success: true,

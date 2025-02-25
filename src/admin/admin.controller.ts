@@ -23,4 +23,13 @@ export class AdminController {
   returnBook(@Param('id', ParseUUIDPipe) id: string) {
     return this.adminService.returnBook(id);
   }
+
+  /**
+   * Podgląd logów systemowych
+   * */
+  @UseRule(['a9'])
+  @Get('logs')
+  getLogs() {
+    return this.adminService.getLogs();
+  }
 }

@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Rent } from '../rents/entities/rent.entity';
 import { User } from '../user/entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
 import { Book } from '../books/entities/book.entity';
+import { LogAction } from '../types/log-action.enum';
+import { LogsService } from '../logs/logs.service';
+import { Logs } from '../logs/entities/logs.entity';
 
 @Injectable()
 export class AdminService {
+  @Inject(forwardRef(() => LogsService))
+  private readonly logsService: LogsService;
+
   async getRents() {
     return Rent.find({
       relations: {
@@ -66,6 +72,22 @@ export class AdminService {
       rent.book.count = book.count - bookRents;
     }
 
+    await this.logsService.addLog(rent.user, LogAction.Return, rent.book);
+
     return rent;
+  }
+
+  /*Pobieranie wszystkich logów systemowych
+   * */
+  async getLogs() {
+    return Logs.find({
+      order: {
+        date: 'DESC',
+      },
+      relations: {
+        user: true,
+        book: true,
+      },
+    });
   }
 }

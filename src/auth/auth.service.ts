@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CookieOptions, Response } from 'express';
 import { AuthLoginDto } from 'src/auth/dto/auth-login.dto';
 import { User } from 'src/user/entities/user.entity';
@@ -6,10 +6,13 @@ import { hashPassword } from 'src/utils/hash-password';
 import { v4 as uuid } from 'uuid';
 import { sign } from 'jsonwebtoken';
 import { JwtPayload } from 'src/auth/jwt.strategy';
+import { LogsService } from '../logs/logs.service';
+import { LogAction } from '../types/log-action.enum';
 
 @Injectable()
 export class AuthService {
-  constructor() {}
+  @Inject(forwardRef(() => LogsService))
+  private readonly logsService: LogsService;
 
   private async createToken(
     currentTokenId: string,
@@ -53,6 +56,8 @@ export class AuthService {
       const token = await this.createToken(await this.generateToken(user));
 
       const { password: _, token: _1, ...userWithoutPassword } = user;
+
+      await this.logsService.addLog(user, LogAction.Login);
 
       return (
         res

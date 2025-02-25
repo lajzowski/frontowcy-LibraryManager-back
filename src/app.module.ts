@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
 import { RentsModule } from './rents/rents.module';
 import { AdminModule } from './admin/admin.module';
+import { LogsService } from './logs/logs.service';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AdminModule } from './admin/admin.module';
     AdminModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LogsService],
+  exports: [LogsService],
 })
 export class AppModule {}

@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { User } from './entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
 import { hashPassword } from '../utils/hash-password';
 import { Rent } from '../rents/entities/rent.entity';
 import { IsNull } from 'typeorm';
+import { LogsService } from '../logs/logs.service';
+import { LogAction } from '../types/log-action.enum';
 
 @Injectable()
 export class UserService {
+  @Inject(forwardRef(() => LogsService))
+  private readonly logsService: LogsService;
+
   /**
    * Generowanie prostego numeru karty*/
   private generateCardNumber = (): number => {
@@ -50,6 +55,8 @@ export class UserService {
 
     const { password: _, ...userWithoutPassword } = newUser;
 
+    await this.logsService.addLog(newUser, LogAction.Register);
+
     return userWithoutPassword as Omit<User, 'password'>;
   }
 
@@ -87,6 +94,8 @@ export class UserService {
     }
 
     // usuwanie użytkownika
+
+    await this.logsService.addLog(user, LogAction.RemoveAccount);
 
     await user.remove();
 

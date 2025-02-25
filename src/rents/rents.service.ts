@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { User } from '../user/entities/user.entity';
 import { Rent } from './entities/rent.entity';
 import { ErrorInterface } from '../types/error.interface';
 import { Book } from '../books/entities/book.entity';
+import { LogsService } from '../logs/logs.service';
+import { LogAction } from '../types/log-action.enum';
 
 @Injectable()
 export class RentsService {
+  @Inject(forwardRef(() => LogsService))
+  private readonly logsService: LogsService;
   /**
    * Funkcja zwraca wszystkie wynajmowane książki wraz ze zwróconymi
    * dla zalogowanego użytkownika.
@@ -77,6 +81,9 @@ export class RentsService {
 
       rent.book.count = book.count - bookRents;
     }
+
+    // dodawania logów
+    await this.logsService.addLog(user, LogAction.Return, rent.book);
 
     return rent;
   }
