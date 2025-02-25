@@ -54,7 +54,7 @@ export class RentsService {
       };
     }
 
-    // ustawianie wynajmu na dzisiejsza datę
+    // ustawianie wynajmu na dzisiejszą datę
     rent.returnDate = new Date();
     await rent.save();
 
