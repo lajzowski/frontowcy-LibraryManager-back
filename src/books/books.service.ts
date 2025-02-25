@@ -3,6 +3,7 @@ import { Book } from './entities/book.entity';
 import { User } from '../user/entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
 import { Rent } from '../rents/entities/rent.entity';
+import { AddBookDto } from './dto/add-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -121,5 +122,42 @@ export class BooksService {
     book.rents = [];
 
     return book;
+  }
+
+  /**
+   * Dodawanie książki
+   * */
+  async addBook(
+    addBookDto: AddBookDto,
+    user: User,
+  ): Promise<Book | ErrorInterface> {
+    // sprawdzanie, czy slug nie jest zajęty i ma minimum 1 znak
+
+    const slug = this.sanitizedSlug(addBookDto.slug);
+
+    if (slug.length < 1) {
+      return {
+        error: 'Slug musi posiadać minimum 1 znak',
+      };
+    }
+
+    // sprawdzanie, czy w bazie nie ma książki, która posiada taki sam slug.
+
+    const slugCount = await Book.countBy({ slug });
+
+    if (slugCount > 0) {
+      return {
+        error: 'Książka z podanym slugiem już istnieje.',
+      };
+    }
+
+    const newBook = Book.create({
+      ...addBookDto,
+      slug,
+    });
+
+    await newBook.save();
+
+    return newBook;
   }
 }

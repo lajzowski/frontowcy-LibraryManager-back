@@ -1,8 +1,17 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { BooksService } from './books.service';
 import { UseRule } from '../decorators/use-rule.decorator';
 import { UserObj } from '../decorators/user-obj.decorator';
 import { User } from '../user/entities/user.entity';
+import { AddBookDto } from './dto/add-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -33,5 +42,20 @@ export class BooksController {
   @Post(':slug/rent')
   rentBook(@Param('slug') slug: string, @UserObj() user: User) {
     return this.booksService.rentBook(slug, user);
+  }
+
+  /**
+   * Dodawanie książki przez Admina
+   * */
+  @UseRule(['a9'])
+  @Post()
+  async addBook(@Body() addBookDto: AddBookDto, @UserObj() user: User) {
+    const result = await this.booksService.addBook(addBookDto, user);
+    if ('error' in result) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST, {
+        cause: new Error(result.error),
+      });
+    }
+    return result;
   }
 }
