@@ -3,6 +3,8 @@ import { UserRegisterDto } from './dto/user-register.dto';
 import { User } from './entities/user.entity';
 import { ErrorInterface } from '../types/error.interface';
 import { hashPassword } from '../utils/hash-password';
+import { Rent } from '../rents/entities/rent.entity';
+import { IsNull } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -46,10 +48,50 @@ export class UserService {
 
     await newUser.save();
 
-    console.log({ newUser });
-
     const { password: _, ...userWithoutPassword } = newUser;
 
     return userWithoutPassword as Omit<User, 'password'>;
+  }
+
+  async deleteUser(
+    userData: User,
+  ): Promise<ErrorInterface | { removed: true }> {
+    const user = await User.findOne({
+      where: {
+        id: userData.id,
+      },
+    });
+
+    // sprawdzanie, czy user istnieje.
+    if (!user) {
+      return {
+        error: 'Użytkownik nie istnieje',
+      };
+    }
+
+    // sprawdzanie, czy zwrócił wszystkie książki
+
+    const rents = await Rent.findOne({
+      where: {
+        user: {
+          id: user.id,
+        },
+        returnDate: IsNull(),
+      },
+    });
+
+    if (rents) {
+      return {
+        error: 'Użytkownik nie zwrócił wszystkich książek',
+      };
+    }
+
+    // usuwanie użytkownika
+
+    await user.remove();
+
+    return {
+      removed: true,
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UseRule } from '../decorators/use-rule.decorator';
 import { UserObj } from '../decorators/user-obj.decorator';
@@ -24,5 +24,16 @@ export class UserController {
   @Get('auth-test')
   authTest() {
     return 'auth test';
+  }
+
+  /**Usuwanie konta użytkownika
+   * @param _userId - id użytkownika (parametr niewykorzystywany)
+   * @param user
+   *
+   */
+  @UseRule()
+  @Delete(':_userId')
+  deleteUser(@Param('id') _userId: User['id'], @UserObj() user: User) {
+    return this.userService.deleteUser(user);
   }
 }
