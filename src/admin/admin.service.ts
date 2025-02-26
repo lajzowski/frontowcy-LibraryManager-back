@@ -33,6 +33,7 @@ export class AdminService {
       },
       relations: {
         book: true,
+        user: true,
       },
     });
 

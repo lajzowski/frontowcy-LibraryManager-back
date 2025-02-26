@@ -48,6 +48,7 @@ export class UserService {
       firstname,
       lastname,
       email,
+      rule: 'u0',
       password: hashPassword(password),
     });
 

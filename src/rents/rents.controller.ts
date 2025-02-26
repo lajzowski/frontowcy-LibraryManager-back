@@ -13,7 +13,7 @@ export class RentsController {
    * Funkcja zwraca wszystkie wynajmowane książki wraz ze zwróconymi
    * dla zalogowanego użytkownika.
    * */
-  @UseRule()
+  @UseRule(['u0'])
   @Get('')
   getAllRents(@UserObj() user: User) {
     return this.rentsService.getAllRents(user);
@@ -24,7 +24,7 @@ export class RentsController {
    * @param user
    * @return Rent
    * */
-  @UseRule()
+  @UseRule(['u0'])
   @Patch('return/:id')
   returnBook(@Param('id', ParseUUIDPipe) id: string, @UserObj() user: User) {
     return this.rentsService.returnBook(id, user);

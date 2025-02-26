@@ -14,7 +14,7 @@ export class StatsController {
    * @param month
    * @param user
    * */
-  @UseRule()
+  @UseRule(['u0'])
   @Get('month/:year/:month')
   getMonthStats(
     @Param('year', ParseIntPipe) year: number,
@@ -27,7 +27,7 @@ export class StatsController {
   /**
    * Pobieranie ilości zwrotów w terminie i po terminie
    * */
-  @UseRule()
+  @UseRule(['u0'])
   @Get('return')
   getReturnStats(@UserObj() user: User) {
     return this.statsService.getReturnStats(user);
@@ -36,7 +36,7 @@ export class StatsController {
   /**
    * Pobieranie liczbę aktualnie wypożyczonych książek
    * */
-  @UseRule()
+  @UseRule(['u0'])
   @Get('current')
   getCurrentStats(@UserObj() user: User) {
     return this.statsService.getCurrentStats(user);

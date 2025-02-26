@@ -41,7 +41,7 @@ export class BooksController {
    * @param user - zwraca obiekt zalogowanego użytkownika
    * */
 
-  @UseRule()
+  @UseRule(['u0'])
   @Post(':slug/rent')
   rentBook(@Param('slug') slug: string, @UserObj() user: User) {
     return this.booksService.rentBook(slug, user);
