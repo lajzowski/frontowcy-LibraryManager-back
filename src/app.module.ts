@@ -10,6 +10,7 @@ import { BooksModule } from './books/books.module';
 import { RentsModule } from './rents/rents.module';
 import { AdminModule } from './admin/admin.module';
 import { LogsService } from './logs/logs.service';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LogsService } from './logs/logs.service';
     BooksModule,
     RentsModule,
     AdminModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService, LogsService],
