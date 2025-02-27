@@ -41,7 +41,7 @@ Frontend wymaga działania tego backendu jako punktu końcowego API.
 2. Przejdź do katalogu projektu:
 
    ```bash
-   cd LibraryManager-Backend
+   cd frontowcy-LibraryManager-back
    ```
 
 3. Zainstaluj zależności:
